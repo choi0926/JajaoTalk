@@ -20,10 +20,10 @@ public class BackupChatRoom {
     @OneToMany(mappedBy = "backupChatRoom",cascade = CascadeType.ALL)
     private List<BackupChatLog> backupChatLogs = new ArrayList<>();
 
-    private Long user_id;  //DB에 저장시 체크
+    private Long user_id; //DB에 저장시 체크
     private String category;
     private String subject;
     private LocalDateTime deletedTime;
-    private Timestamp createdTime;//DB에 시간저장시 type 체크
+    private Timestamp createdTime; //DB에 시간저장시 type 체크
 
 }
