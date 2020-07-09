@@ -2,10 +2,9 @@ package com.choi.jajaotalk.api;
 
 import com.choi.jajaotalk.domain.User;
 import com.choi.jajaotalk.service.UserService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +23,7 @@ public class UserApiController {
 
     @PostMapping("api/user/login")
     public LoginResult login(@RequestBody User user){
-            List<User> findUsers =  userService.findUsers(user);
+        List<User> findUsers =  userService.findUsers(user);
         if(findUsers.isEmpty()){
             User signUpUser = new User();
             signUpUser.setNickname(user.getNickname());
@@ -33,30 +32,31 @@ public class UserApiController {
             userService.signUp(signUpUser);
             UserDto signUpUserDto = new UserDto();
             signUpUserDto.setNickname(signUpUser.getNickname());
-            return new LoginResult(true,200,"signup success.",signUpUserDto);
+            return new LoginResult(true,200,"signUp success.", signUpUserDto);
         }else {
             User passwordMatchCheckUser =  userService.signIn(user);
             if(!passwordEncoder.matches(user.getPassword(),passwordMatchCheckUser.getPassword())){
                 UserDto notLoginUserDto = new UserDto();
-                return new LoginResult(true,200,"The password is wrong.",notLoginUserDto);
+                return new LoginResult(true,200,"The password is wrong.", notLoginUserDto);
             }
             UserDto loginUserDto = new UserDto();
             loginUserDto.setNickname(passwordMatchCheckUser.getNickname());
-            return new LoginResult(true,200,"signin success.",loginUserDto);
+            return new LoginResult(true,200,"signIn success.", loginUserDto);
         }
     }
 
-    @Data
+    @Getter @Setter
     @AllArgsConstructor
     static class LoginResult<T> {
-        private T success;
-        private T status;
-        private T message;
+        private boolean  success;
+        private int status;
+        private String message;
         private T data;
     }
 
-    @Data
+    @Getter @Setter
     static class UserDto {
         private String nickname;
     }
 }
+

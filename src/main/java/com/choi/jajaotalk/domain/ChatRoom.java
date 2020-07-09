@@ -23,7 +23,10 @@ public class ChatRoom {
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<ChatLog> chatLogs = new ArrayList<>();
 
-    private String category;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     private String subject;
     private String headCount;
     private LocalDateTime createdTime;
