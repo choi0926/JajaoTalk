@@ -4,7 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -15,9 +16,14 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<ChatLog> chatLogs = new ArrayList<>();
 
     private String nickname;
     private String password;
+    private String role;
 }

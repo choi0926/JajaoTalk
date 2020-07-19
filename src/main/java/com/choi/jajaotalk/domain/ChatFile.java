@@ -13,8 +13,8 @@ public class ChatFile {
     @Column(name = "chat_file_id")
     private Long id;
 
-    @OneToOne(mappedBy = "chatFile", fetch = FetchType.LAZY)
-    private ChatLog chatLog;
+//    @OneToOne(mappedBy = "chatFile", fetch = FetchType.LAZY)
+//    private ChatLog chatLog;
 
     private String fileUrl;
 }

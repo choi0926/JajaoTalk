@@ -13,8 +13,8 @@ public class ChatImage {
     @Column(name = "chat_image_id")
     private Long id;
 
-    @OneToOne(mappedBy = "chatImage", fetch = FetchType.LAZY)
-    private ChatLog chatLog;
+//    @OneToOne(mappedBy = "chatImage", fetch = FetchType.LAZY)
+//    private ChatLog chatLog;
 
     private String imageUrl;
 

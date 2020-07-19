@@ -16,19 +16,17 @@ public class ChatRoom {
     @Column(name = "chat_room_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @OneToOne(mappedBy = "chatRoom", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private User user;
 
-    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<ChatLog> chatLogs = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     private String subject;
-    private String headCount;
+    private int headCount;
     private LocalDateTime createdTime;
 
 }

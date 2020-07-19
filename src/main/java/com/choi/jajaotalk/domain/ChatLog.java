@@ -17,17 +17,20 @@ public class ChatLog {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
+//    TODO
+//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "chat_file_id")
+//    private ChatFile chatFile;
+//
+//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "chat_image_id")
+//    private ChatImage chatImage;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_file_id")
-    private ChatFile chatFile;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_image_id")
-    private ChatImage chatImage;
-
-    @Lob
     private String content;
 
-    private LocalDateTime chatLongTime;
+    private LocalDateTime chatLogTime;
 }
