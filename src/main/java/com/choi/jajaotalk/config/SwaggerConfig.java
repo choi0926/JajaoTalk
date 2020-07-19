@@ -18,7 +18,7 @@ public class SwaggerConfig {
     private String title;
 
     @Bean
-    public Docket apiV1(){
+    public Docket apiV1() {
         version = "V1";
         title = "jajao_talk API" + version;
 
@@ -28,7 +28,7 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.choi.jajaotalk.api"))
                 .build()
-                .apiInfo(apiInfo(title,version));
+                .apiInfo(apiInfo(title, version));
     }
 
     private ApiInfo apiInfo(String title, String version) {
