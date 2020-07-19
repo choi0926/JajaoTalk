@@ -13,25 +13,20 @@ public class UserRepository {
 
     private final EntityManager em;
 
-    public void save(User user){
+    public void save(User user) {
         em.persist(user);
     }
 
-    public User fineById(Long id){
-        return em.find(User.class,id);
-    }
-
-    public List<User> findUserName(String nickname){
+    public List<User> findUserName(String nickname) {
         return em.createQuery("select u from User u " +
-                "where u.nickname = : nickname",User.class)
-                .setParameter("nickname",nickname)
+                "where u.nickname = : nickname", User.class)
+                .setParameter("nickname", nickname)
                 .getResultList();
-
     }
 
     public User findByNickname(String nickname) {
         return em.createQuery("select u from User u " +
-                "where u.nickname = : nickname",User.class)
-                .setParameter("nickname",nickname).getSingleResult();
+                "where u.nickname = : nickname", User.class)
+                .setParameter("nickname", nickname).getSingleResult();
     }
 }

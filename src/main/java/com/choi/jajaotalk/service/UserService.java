@@ -15,16 +15,18 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public List<User> findUsers(User user){
+    public List<User> findUsers(User user) {
         List<User> findUsers = userRepository.findUserName(user.getNickname());
         return findUsers;
     }
+
     @Transactional
-    public Long signUp(User user){
+    public Long signUp(User user) {
         userRepository.save(user);
         return user.getId();
     }
-    public User signIn(User user){
+
+    public User signIn(User user) {
         User loginUser = userRepository.findByNickname(user.getNickname());
         return loginUser;
     }
