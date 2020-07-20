@@ -37,12 +37,6 @@ public class ChatRoomService {
         user.setChatRoom(chatRoom);
         userRepository.save(user);
 
-        User user1 = new User();
-        user1.setNickname("test");
-        user1.setPassword("tt");
-        user1.setChatRoom(chatRoom);
-        userRepository.save(user1);
-
         ChatLog chatLog = new ChatLog();
         chatLog.setContent("채팅방이 생성되었습니다.");
         chatLog.setUser(user);
