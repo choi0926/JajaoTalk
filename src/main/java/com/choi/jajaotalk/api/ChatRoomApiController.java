@@ -5,14 +5,12 @@ import com.choi.jajaotalk.service.ChatRoomService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+
 import static java.util.stream.Collectors.toList;
 
 @RestController
@@ -24,15 +22,15 @@ public class ChatRoomApiController {
     @PostMapping("api/chat/new")
     public ChatRoomCreateRusult createChatRoom(@RequestBody CreateChatRoomDto createChatRoomDto) {
 
-        ChatRoom newChatRoom = chatRoomService.createChatRoom(createChatRoomDto.getNickname(),createChatRoomDto.getCategoryCode(), createChatRoomDto.getSubject(), createChatRoomDto.getHeadCount());
+        ChatRoom newChatRoom = chatRoomService.createChatRoom(createChatRoomDto.getNickname(), createChatRoomDto.getCategoryCode(), createChatRoomDto.getSubject(), createChatRoomDto.getHeadCount());
         ChatRoomDto createChatRoom = new ChatRoomDto(newChatRoom.getId(), newChatRoom.getCategory().getValue(), newChatRoom.getSubject(), newChatRoom.getHeadCount(), newChatRoom.getCreatedTime());
         return new ChatRoomCreateRusult(true, 200, "You have successfully created a chat room.", createChatRoom);
     }
 
     @GetMapping("api/chat")
-    public ChatRoomListResult chatRooms() {
+    public ChatRoomListResult chatRooms(@RequestParam(value = "offset", defaultValue = "0") int offset, @RequestParam(value = "limit", defaultValue = "10") int limit) {
 
-        List<ChatRoom> findChatRooms = chatRoomService.findChatRooms();
+        List<ChatRoom> findChatRooms = chatRoomService.findChatRooms(offset, limit);
         List<ChatRoomListDto> collect = findChatRooms.stream().distinct().map(chatRoom -> new ChatRoomListDto(chatRoom)).collect(toList());
         return new ChatRoomListResult(true, 200, "Successfully returns a list of chat rooms.", collect);
     }
@@ -47,7 +45,7 @@ public class ChatRoomApiController {
 
     @Data
     @AllArgsConstructor
-    static class ChatRoomWithLog{
+    static class ChatRoomWithLog {
 
         private ChatRoomDto chatRoomDto;
         private ChatLogDto chatLogDto;
@@ -68,7 +66,7 @@ public class ChatRoomApiController {
 
         private Long chatRoomId;
         private ChatLogDto chatLog;
-//        private List<ChatLogDto> chatLog;
+        //        private List<ChatLogDto> chatLog;
         private String category;
         private String subject;
         private int headCount;
@@ -85,20 +83,19 @@ public class ChatRoomApiController {
             createdTime = chatRoom.getCreatedTime();
         }
     }
+
     @Data
-    static class ChatLogDto{
+    static class ChatLogDto {
 
         private Long chatLogId;
-        private String nickname;
         private String content;
         private LocalDateTime chatLogTime;
 
         public ChatLogDto(ChatLog chatLog) {
 
             chatLogId = chatLog.getId();
-            nickname = chatLog.getUser().getNickname();
-           content = chatLog.getContent();
-           chatLogTime = chatLog.getChatLogTime();
+            content = chatLog.getContent();
+            chatLogTime = chatLog.getChatLogTime();
         }
     }
 

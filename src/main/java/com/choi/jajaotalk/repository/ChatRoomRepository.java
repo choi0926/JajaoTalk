@@ -17,7 +17,7 @@ public class ChatRoomRepository {
         em.persist(chatRoom);
     }
 
-    public List<ChatRoom> findAll() {
-        return em.createQuery("select cr from ChatRoom cr",ChatRoom.class).getResultList();
+    public List<ChatRoom> findAll(int offset, int limit) {
+        return em.createQuery("select cr from ChatRoom cr",ChatRoom.class).setFirstResult(offset).setMaxResults(limit).getResultList();
     }
 }

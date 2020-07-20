@@ -31,12 +31,17 @@ public class ChatRoomService {
         chatRoom.setCategory(Category.valueOf(categoryCodeId));
         chatRoom.setSubject(subject);
         chatRoom.setHeadCount(headCount);
-        chatRoom.setUser(user);
         chatRoom.setCreatedTime(LocalDateTime.now());
         chatRoomRepository.save(chatRoom);
 
         user.setChatRoom(chatRoom);
         userRepository.save(user);
+
+        User user1 = new User();
+        user1.setNickname("test");
+        user1.setPassword("tt");
+        user1.setChatRoom(chatRoom);
+        userRepository.save(user1);
 
         ChatLog chatLog = new ChatLog();
         chatLog.setContent("채팅방이 생성되었습니다.");
@@ -48,8 +53,8 @@ public class ChatRoomService {
         return chatRoom;
     }
 
-    public List<ChatRoom> findChatRooms() {
-        return chatRoomRepository.findAll();
+    public List<ChatRoom> findChatRooms(int offset,int limit) {
+        return chatRoomRepository.findAll(offset,limit);
     }
 
 }
