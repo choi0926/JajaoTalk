@@ -47,8 +47,12 @@ public class ChatRoomService {
         return chatRoom;
     }
 
-    public List<ChatRoom> findChatRooms(int offset,int limit) {
-        return chatRoomRepository.findAll(offset,limit);
+    public List<ChatRoom> findChatRooms(int offset, int limit) {
+        return chatRoomRepository.findAll(offset, limit);
+    }
+
+    public List<ChatRoom> findBySubject(String subject, int offset, int limit) {
+        return chatRoomRepository.findBySubject(subject, offset, limit);
     }
 
 }

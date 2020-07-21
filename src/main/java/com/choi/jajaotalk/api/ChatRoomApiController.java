@@ -19,7 +19,7 @@ public class ChatRoomApiController {
 
     private final ChatRoomService chatRoomService;
 
-    @PostMapping("api/chat/new")
+    @PostMapping("api/chatroom")
     public ChatRoomCreateRusult createChatRoom(@RequestBody CreateChatRoomDto createChatRoomDto) {
 
         ChatRoom newChatRoom = chatRoomService.createChatRoom(createChatRoomDto.getNickname(), createChatRoomDto.getCategoryCode(), createChatRoomDto.getSubject(), createChatRoomDto.getHeadCount());
@@ -27,21 +27,31 @@ public class ChatRoomApiController {
         return new ChatRoomCreateRusult(true, 200, "You have successfully created a chat room.", createChatRoom);
     }
 
-    @GetMapping("api/chat")
-    public ChatRoomListResult chatRooms(@RequestParam(value = "offset", defaultValue = "0") int offset, @RequestParam(value = "limit", defaultValue = "10") int limit) {
+    @GetMapping("api/chatrooms")
+    public ChatRoomListResult chatRooms(@RequestParam(value = "offset", defaultValue = "0") int offset,
+                                        @RequestParam(value = "limit", defaultValue = "10") int limit) {
 
         List<ChatRoom> findChatRooms = chatRoomService.findChatRooms(offset, limit);
         List<ChatRoomListDto> collect = findChatRooms.stream().distinct().map(chatRoom -> new ChatRoomListDto(chatRoom)).collect(toList());
         return new ChatRoomListResult(true, 200, "Successfully returns a list of chat rooms.", collect);
     }
 
-    @GetMapping("api/chat/category")
+    @GetMapping("api/chatroom/categories")
     public ChatRoomListResult categories() {
 
         List<Category> al1 = new ArrayList<Category>(Arrays.asList(Category.values()));
         List<CategoryDto> collect = al1.stream().map(categoryCode -> new CategoryDto(categoryCode)).collect(Collectors.toList());
         return new ChatRoomListResult(true, 200, "Successfully return a list of categories.", collect);
     }
+
+//    @GetMapping("api/chat/search") // @GetMapping("api/chatroom/search")
+//    public ChatRoomListResult searchChatRooms(@RequestParam(value = "subject") String subject,
+//                                              @RequestParam(value = "offset", defaultValue = "0") int offset,
+//                                              @RequestParam(value = "limit", defaultValue = "10") int limit){
+//        List<ChatRoom> searchChatRooms = chatRoomService.findBySubject(subject, offset, limit);
+//        List<ChatRoomListDto> collect = searchChatRooms.stream().map(chatRoom -> new ChatRoomListDto(chatRoom)).collect(toList());
+//        return new ChatRoomListResult(true, 200, "Successfully searched for chat rooms.", collect);
+//}
 
     @Data
     @AllArgsConstructor

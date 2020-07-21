@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests() // 다음 리퀘스트에 대한 사용권한 체크
-                .antMatchers("/*/user/*", "/*/chat/**",
+                .antMatchers("/*/user/*", "/*/chatroom/**","/*/chatrooms/**",
                         "/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger.json" //swagger
                 ).permitAll() // 가입 및 인증 주소는 누구나 접근가능
                 .antMatchers().hasRole("USER")
