@@ -87,7 +87,7 @@ public class ChatRoomApiController {
             chatRoomId = chatRoom.getId();
 //            chatLog = chatRoom.getChatLogs().stream().map(chatLog -> new ChatLogDto(chatLog)).collect(toList());
             chatLog = chatRoom.getChatLogs().stream().map(chatLog -> new ChatLogDto(chatLog)).max(Comparator.comparing(ChatLogDto::getChatLogTime)).get();
-            category = chatRoom.getCategory().getKey();
+            category = chatRoom.getCategory().getValue();
             subject = chatRoom.getSubject();
             headCount = chatRoom.getHeadCount();
             createdTime = chatRoom.getCreatedTime();
@@ -134,12 +134,12 @@ public class ChatRoomApiController {
     static class CategoryDto {
 
         private String categoryCode;
-        private String categoryName;
+        private String category;
 
-        public CategoryDto(Category category) {
+        public CategoryDto(Category categories) {
 
-            categoryCode = category.getKey();
-            categoryName = category.getValue();
+            categoryCode = categories.getKey();
+            category = categories.getValue();
         }
     }
 
