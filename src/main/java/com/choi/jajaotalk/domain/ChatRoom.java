@@ -16,9 +16,6 @@ public class ChatRoom {
     @Column(name = "chat_room_id")
     private Long id;
 
-//    @OneToOne(mappedBy = "chatRoom", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private User user;
-
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<ChatLog> chatLogs = new ArrayList<>();
 

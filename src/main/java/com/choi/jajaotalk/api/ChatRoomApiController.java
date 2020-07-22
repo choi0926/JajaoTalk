@@ -1,6 +1,7 @@
 package com.choi.jajaotalk.api;
 
 import com.choi.jajaotalk.domain.*;
+import com.choi.jajaotalk.repository.ChatRoomRepository;
 import com.choi.jajaotalk.service.ChatRoomService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,20 +19,23 @@ import static java.util.stream.Collectors.toList;
 public class ChatRoomApiController {
 
     private final ChatRoomService chatRoomService;
+    private final ChatRoomRepository chatRoomRepository;
 
     @PostMapping("api/chatroom")
     public ChatRoomCreateRusult createChatRoom(@RequestBody CreateChatRoomDto createChatRoomDto) {
 
         ChatRoom newChatRoom = chatRoomService.createChatRoom(createChatRoomDto.getNickname(), createChatRoomDto.getCategoryCode(), createChatRoomDto.getSubject(), createChatRoomDto.getHeadCount());
-        ChatRoomDto createChatRoom = new ChatRoomDto(newChatRoom.getId(), newChatRoom.getCategory().getValue(), newChatRoom.getSubject(), newChatRoom.getHeadCount(), newChatRoom.getCreatedTime());
+        ChatRoom chatRoom = chatRoomService.findOneChatRoom(newChatRoom.getId());
+        ChatRoomDto createChatRoom = new ChatRoomDto(newChatRoom.getId(),chatRoom.getChatLogs().stream().map(chatLog -> new ChatLogDto(chatLog)).min(Comparator.comparing(ChatLogDto::getChatLogTime)).get(),newChatRoom.getCategory().getValue(), newChatRoom.getSubject(), newChatRoom.getHeadCount(), newChatRoom.getCreatedTime());
         return new ChatRoomCreateRusult(true, 200, "You have successfully created a chat room.", createChatRoom);
     }
 
     @GetMapping("api/chatrooms")
-    public ChatRoomListResult chatRooms(@RequestParam(value = "offset", defaultValue = "0") int offset,
+    public ChatRoomListResult chatRooms(@RequestParam(value = "subject") String subject,
+                                        @RequestParam(value = "offset", defaultValue = "0") int offset,
                                         @RequestParam(value = "limit", defaultValue = "10") int limit) {
 
-        List<ChatRoom> findChatRooms = chatRoomService.findChatRooms(offset, limit);
+        List<ChatRoom> findChatRooms = chatRoomService.searchChatRooms(subject, offset, limit);
         List<ChatRoomListDto> collect = findChatRooms.stream().distinct().map(chatRoom -> new ChatRoomListDto(chatRoom)).collect(toList());
         return new ChatRoomListResult(true, 200, "Successfully returns a list of chat rooms.", collect);
     }
@@ -43,8 +47,8 @@ public class ChatRoomApiController {
         List<CategoryDto> collect = al1.stream().map(categoryCode -> new CategoryDto(categoryCode)).collect(Collectors.toList());
         return new ChatRoomListResult(true, 200, "Successfully return a list of categories.", collect);
     }
-
-//    @GetMapping("api/chat/search") // @GetMapping("api/chatroom/search")
+//
+//    @GetMapping("api/chatrooms/search")
 //    public ChatRoomListResult searchChatRooms(@RequestParam(value = "subject") String subject,
 //                                              @RequestParam(value = "offset", defaultValue = "0") int offset,
 //                                              @RequestParam(value = "limit", defaultValue = "10") int limit){
@@ -76,7 +80,6 @@ public class ChatRoomApiController {
 
         private Long chatRoomId;
         private ChatLogDto chatLog;
-        //        private List<ChatLogDto> chatLog;
         private String category;
         private String subject;
         private int headCount;
@@ -85,7 +88,6 @@ public class ChatRoomApiController {
         public ChatRoomListDto(ChatRoom chatRoom) {
 
             chatRoomId = chatRoom.getId();
-//            chatLog = chatRoom.getChatLogs().stream().map(chatLog -> new ChatLogDto(chatLog)).collect(toList());
             chatLog = chatRoom.getChatLogs().stream().map(chatLog -> new ChatLogDto(chatLog)).max(Comparator.comparing(ChatLogDto::getChatLogTime)).get();
             category = chatRoom.getCategory().getValue();
             subject = chatRoom.getSubject();
@@ -124,10 +126,12 @@ public class ChatRoomApiController {
     static class ChatRoomDto {
 
         private Long chatRoomId;
+        private ChatLogDto chatLog;
         private String category;
         private String subject;
         private int headCount;
         private LocalDateTime createTime;
+
     }
 
     @Data

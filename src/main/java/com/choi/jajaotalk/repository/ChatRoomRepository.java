@@ -1,13 +1,10 @@
 package com.choi.jajaotalk.repository;
 
 import com.choi.jajaotalk.domain.ChatRoom;
-
 import static com.choi.jajaotalk.domain.QChatRoom.*;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -25,16 +22,16 @@ public class ChatRoomRepository {
         this.query = new JPAQueryFactory(em);
     }
 
+    public ChatRoom findById(Long id){
+        return em.find(ChatRoom.class,id);
+    }
     public void save(ChatRoom chatRoom) {
         em.persist(chatRoom);
     }
 
-    public List<ChatRoom> findAll(int offset, int limit) {
-        return em.createQuery("select cr from ChatRoom cr", ChatRoom.class).setFirstResult(offset).setMaxResults(limit).getResultList();
-    }
-
-    public List<ChatRoom> findBySubject(String subject, int offset, int limit) {
-        return query.selectFrom(chatRoom)
+    public List<ChatRoom> findChatRoomsBySubject(String subject, int offset, int limit) {
+        return query
+                .selectFrom(chatRoom)
                 .where(subjectLike(subject))
                 .offset(offset)
                 .limit(limit)
@@ -45,6 +42,13 @@ public class ChatRoomRepository {
         if (!StringUtils.hasText(subject)) {
             return null;
         }
-        return chatRoom.subject.like(subject);
+        return chatRoom.subject.contains(subject);
+    }
+
+    public ChatRoom findOneChatRoom(Long id){
+        return query
+                .selectFrom(chatRoom)
+                .where(chatRoom.id.eq(id))
+                .fetchOne();
     }
 }

@@ -22,6 +22,11 @@ public class ChatRoomService {
     private final ChatLogRepository chatLogRepository;
     private final UserRepository userRepository;
 
+    public ChatRoom findById(Long id){
+        ChatRoom chatRoom = chatRoomRepository.findById(id);
+        return chatRoom;
+    }
+
     @Transactional
     public ChatRoom createChatRoom(String nickname, String categoryCodeId, String subject, int headCount) {
 
@@ -47,12 +52,12 @@ public class ChatRoomService {
         return chatRoom;
     }
 
-    public List<ChatRoom> findChatRooms(int offset, int limit) {
-        return chatRoomRepository.findAll(offset, limit);
+    public List<ChatRoom> searchChatRooms(String subject, int offset, int limit) {
+        return chatRoomRepository.findChatRoomsBySubject(subject, offset, limit);
     }
 
-    public List<ChatRoom> findBySubject(String subject, int offset, int limit) {
-        return chatRoomRepository.findBySubject(subject, offset, limit);
+    public ChatRoom findOneChatRoom(Long id){
+        return chatRoomRepository.findOneChatRoom(id);
     }
 
 }
