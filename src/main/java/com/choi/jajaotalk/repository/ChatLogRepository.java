@@ -16,5 +16,4 @@ public class ChatLogRepository {
     public void save(ChatLog chatLog){
         em.persist(chatLog);
     }
-
 }

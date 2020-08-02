@@ -51,4 +51,8 @@ public class ChatRoomRepository {
                 .where(chatRoom.id.eq(id))
                 .fetchOne();
     }
+
+    public void deleteChatRoom(Long id){
+        em.remove(id);
+    }
 }

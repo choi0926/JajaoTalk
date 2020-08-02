@@ -1,5 +1,6 @@
 package com.choi.jajaotalk.domain;
 
+import com.choi.jajaotalk.service.ChatLogService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,6 +25,30 @@ public class ChatRoom {
 
     private String subject;
     private int headCount;
+    private int currentHeadCount;
     private LocalDateTime createdTime;
+
+    public static ChatRoom createChatRoom(String categoryCodeId,String subject, int headCount){
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.setCategory(Category.valueOf(categoryCodeId));
+        chatRoom.setSubject(subject);
+        chatRoom.setHeadCount(headCount);
+        chatRoom.setCreatedTime(LocalDateTime.now());
+        return chatRoom;
+    }
+    public void currentHeadCountPlus(){
+
+        if (this.headCount>currentHeadCount){
+        this.currentHeadCount++;
+        System.out.println("인원"+this.currentHeadCount);
+        } else {
+            throw new IllegalStateException("This chat room is already full.");
+        }
+    }
+
+    public void currentHeadCountMinus(){
+        this.currentHeadCount--;
+    }
+
 
 }
