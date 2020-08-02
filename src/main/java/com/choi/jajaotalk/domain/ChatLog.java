@@ -17,14 +17,6 @@ public class ChatLog {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
-//    TODO
-//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "chat_file_id")
-//    private ChatFile chatFile;
-//
-//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "chat_image_id")
-//    private ChatImage chatImage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -33,4 +25,24 @@ public class ChatLog {
     private String content;
 
     private LocalDateTime chatLogTime;
+
+    public static ChatLog createChatLog(ChatRoom chatRoom,User user, String content, LocalDateTime chatLogTime){
+
+        ChatLog chatLog = new ChatLog();
+        chatLog.setChatRoom(chatRoom);
+        chatLog.setUser(user);
+        chatLog.setContent(content);
+        chatLog.setChatLogTime(chatLogTime);
+        return  chatLog;
+    }
+
+    public static ChatLog createChatRoomChatLog(ChatRoom chatRoom,User user){
+
+        ChatLog chatLog = new ChatLog();
+        chatLog.setChatRoom(chatRoom);
+        chatLog.setContent("채팅방이 생성되었습니다.");
+        chatLog.setUser(user);
+        chatLog.setChatLogTime(chatRoom.getCreatedTime());
+        return  chatLog;
+    }
 }

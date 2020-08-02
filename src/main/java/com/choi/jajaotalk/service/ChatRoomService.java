@@ -32,21 +32,13 @@ public class ChatRoomService {
 
         User user = userRepository.findByNickname(nickname);
 
-        ChatRoom chatRoom = new ChatRoom();
-        chatRoom.setCategory(Category.valueOf(categoryCodeId));
-        chatRoom.setSubject(subject);
-        chatRoom.setHeadCount(headCount);
-        chatRoom.setCreatedTime(LocalDateTime.now());
+        ChatRoom chatRoom = ChatRoom.createChatRoom(categoryCodeId, subject, headCount);
         chatRoomRepository.save(chatRoom);
 
-        user.setChatRoom(chatRoom);
-        userRepository.save(user);
+//        user.setChatRoom(chatRoom);
+//        userRepository.save(user);
 
-        ChatLog chatLog = new ChatLog();
-        chatLog.setContent("채팅방이 생성되었습니다.");
-        chatLog.setUser(user);
-        chatLog.setChatLogTime(chatRoom.getCreatedTime());
-        chatLog.setChatRoom(chatRoom);
+        ChatLog chatLog = ChatLog.createChatRoomChatLog(chatRoom, user);
         chatLogRepository.save(chatLog);
 
         return chatRoom;
@@ -58,6 +50,11 @@ public class ChatRoomService {
 
     public ChatRoom findOneChatRoom(Long id){
         return chatRoomRepository.findOneChatRoom(id);
+    }
+
+    @Transactional
+    public void deleteChatRoom(Long id){
+        chatRoomRepository.deleteChatRoom(id);
     }
 
 }

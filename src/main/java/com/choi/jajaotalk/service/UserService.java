@@ -1,5 +1,6 @@
 package com.choi.jajaotalk.service;
 
+import com.choi.jajaotalk.domain.ChatRoom;
 import com.choi.jajaotalk.domain.User;
 import com.choi.jajaotalk.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,5 +30,16 @@ public class UserService {
     public User signIn(User user) {
         User loginUser = userRepository.findByNickname(user.getNickname());
         return loginUser;
+    }
+
+    public User findUser(String nickname){
+        User findUser = userRepository.findByNickname(nickname);
+        return findUser;
+    }
+
+    @Transactional
+    public void updateUserChatRoom(String nickname, ChatRoom chatRoom){
+        User findUser = userRepository.findByNickname(nickname);
+        findUser.setChatRoom(chatRoom);
     }
 }
