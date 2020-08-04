@@ -24,15 +24,17 @@ public class ChatLog {
 
     private String content;
 
+    private MessageType type;
     private LocalDateTime chatLogTime;
 
-    public static ChatLog createChatLog(ChatRoom chatRoom,User user, String content, LocalDateTime chatLogTime){
-
+    public static ChatLog createChatLog(ChatRoom chatRoom,User user, String content, LocalDateTime chatLogTime,MessageType type){
         ChatLog chatLog = new ChatLog();
         chatLog.setChatRoom(chatRoom);
         chatLog.setUser(user);
         chatLog.setContent(content);
         chatLog.setChatLogTime(chatLogTime);
+        chatLog.setType(type);
+
         return  chatLog;
     }
 

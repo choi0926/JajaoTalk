@@ -2,6 +2,7 @@ package com.choi.jajaotalk.api;
 
 import com.choi.jajaotalk.domain.*;
 import com.choi.jajaotalk.repository.ChatRoomRepository;
+import com.choi.jajaotalk.service.ChatLogService;
 import com.choi.jajaotalk.service.ChatRoomService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,21 +20,22 @@ import static java.util.stream.Collectors.toList;
 public class ChatRoomApiController {
 
     private final ChatRoomService chatRoomService;
-    private final ChatRoomRepository chatRoomRepository;
+    private final ChatLogService chatLogService;
 
     @PostMapping("api/chatroom")
-    public ChatRoomCreateRusult createChatRoom(@RequestBody CreateChatRoomDto createChatRoomDto) {
+    public ChatRoomListResult createChatRoom(@RequestBody CreateChatRoomDto createChatRoomDto) {
 
         ChatRoom newChatRoom = chatRoomService.createChatRoom(createChatRoomDto.getNickname(), createChatRoomDto.getCategoryCode(), createChatRoomDto.getSubject(), createChatRoomDto.getHeadCount());
         ChatRoom chatRoom = chatRoomService.findOneChatRoom(newChatRoom.getId());
         ChatRoomDto createChatRoom = new ChatRoomDto(newChatRoom.getId(),chatRoom.getChatLogs().stream().map(chatLog -> new ChatLogDto(chatLog)).min(Comparator.comparing(ChatLogDto::getChatLogTime)).get(),newChatRoom.getCategory().getValue(), newChatRoom.getSubject(), newChatRoom.getHeadCount(), newChatRoom.getCreatedTime());
-        return new ChatRoomCreateRusult(true, 200, "You have successfully created a chat room.", createChatRoom);
+        return new ChatRoomListResult(true, 200, "You have successfully created a chat room.", createChatRoom);
     }
 
     @GetMapping("api/chatrooms")
     public ChatRoomListResult chatRooms(@RequestParam(value = "subject") String subject,
                                         @RequestParam(value = "offset", defaultValue = "0") int offset,
                                         @RequestParam(value = "limit", defaultValue = "10") int limit) {
+        //1 시간 동안 로그 없는 채팅방 삭제
 
         List<ChatRoom> findChatRooms = chatRoomService.searchChatRooms(subject, offset, limit);
         List<ChatRoomListDto> collect = findChatRooms.stream().distinct().map(chatRoom -> new ChatRoomListDto(chatRoom)).collect(toList());
@@ -47,22 +49,12 @@ public class ChatRoomApiController {
         List<CategoryDto> collect = al1.stream().map(categoryCode -> new CategoryDto(categoryCode)).collect(Collectors.toList());
         return new ChatRoomListResult(true, 200, "Successfully return a list of categories.", collect);
     }
-//
-//    @GetMapping("api/chatrooms/search")
-//    public ChatRoomListResult searchChatRooms(@RequestParam(value = "subject") String subject,
-//                                              @RequestParam(value = "offset", defaultValue = "0") int offset,
-//                                              @RequestParam(value = "limit", defaultValue = "10") int limit){
-//        List<ChatRoom> searchChatRooms = chatRoomService.findBySubject(subject, offset, limit);
-//        List<ChatRoomListDto> collect = searchChatRooms.stream().map(chatRoom -> new ChatRoomListDto(chatRoom)).collect(toList());
-//        return new ChatRoomListResult(true, 200, "Successfully searched for chat rooms.", collect);
-//}
 
-    @Data
-    @AllArgsConstructor
-    static class ChatRoomWithLog {
-
-        private ChatRoomDto chatRoomDto;
-        private ChatLogDto chatLogDto;
+    @GetMapping("api/chatroom/{id}")
+    public ChatRoomListResult chatRoomChatLogs(@PathVariable Long id){
+        List<ChatLog> chatLogs = chatLogService.findChatRoomIdByChatLog(id);
+        List<ChatRoomChatLogDto> collect = chatLogs.stream().map(chatLog -> new ChatRoomChatLogDto(chatLog)).collect(toList());
+        return new ChatRoomListResult(true, 200, "You have successfully viewed the chat log.", collect);
     }
 
     @Data
@@ -112,6 +104,26 @@ public class ChatRoomApiController {
     }
 
     @Data
+    static class ChatRoomChatLogDto {
+
+        private Long chatLogId;
+        private MessageType type;
+        private Long chatRoomId;
+        private String nickname;
+        private String content;
+        private LocalDateTime chatLogTime;
+
+        public ChatRoomChatLogDto(ChatLog chatLog) {
+            chatLogId = chatLog.getId();
+            type = chatLog.getType();
+            chatRoomId = chatLog.getChatRoom().getId();
+            nickname = chatLog.getUser().getNickname();
+            content = chatLog.getContent();
+            chatLogTime = chatLog.getChatLogTime();
+        }
+    }
+
+    @Data
     @AllArgsConstructor
     static class CreateChatRoomDto {
 
@@ -145,15 +157,5 @@ public class ChatRoomApiController {
             categoryCode = categories.getKey();
             category = categories.getValue();
         }
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class ChatRoomCreateRusult<T> {
-
-        private boolean success;
-        private int status;
-        private String message;
-        private T data;
     }
 }

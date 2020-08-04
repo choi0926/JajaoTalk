@@ -1,6 +1,5 @@
 package com.choi.jajaotalk.service;
 
-import com.choi.jajaotalk.domain.Category;
 import com.choi.jajaotalk.domain.ChatLog;
 import com.choi.jajaotalk.domain.ChatRoom;
 import com.choi.jajaotalk.domain.User;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -54,7 +52,25 @@ public class ChatRoomService {
 
     @Transactional
     public void deleteChatRoom(Long id){
-        chatRoomRepository.deleteChatRoom(id);
+        ChatRoom chatRoom = chatRoomRepository.findById(id);
+        chatRoomRepository.removeChatRoom(chatRoom);
     }
 
+    @Transactional
+    public ChatRoom currentHeadCountPlus(Long id){
+        ChatRoom chatRoom = chatRoomRepository.findById(id);
+        chatRoom.currentHeadCountPlus();
+        return chatRoom;
+    }
+
+    @Transactional
+    public ChatRoom currentHeadCountMinus(Long id){
+        ChatRoom chatRoom = chatRoomRepository.findById(id);
+        chatRoom.currentHeadCountMinus();
+        return chatRoom;
+    }
+
+//    public void deleteChatRoomOneHourNotExistChatLog(){
+//        chatRoomRepository.removeChatRoomNotExistChatLog();
+//    }
 }

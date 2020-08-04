@@ -2,7 +2,7 @@ package com.choi.jajaotalk.repository;
 
 import com.choi.jajaotalk.domain.ChatRoom;
 import static com.choi.jajaotalk.domain.QChatRoom.*;
-
+import static com.choi.jajaotalk.domain.QChatLog.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -52,7 +52,11 @@ public class ChatRoomRepository {
                 .fetchOne();
     }
 
-    public void deleteChatRoom(Long id){
-        em.remove(id);
+    public void removeChatRoom(ChatRoom chatRoom){
+        em.remove(chatRoom);
     }
+
+//    public void removeChatRoomNotExistChatLog() {
+////       return query.delete(chatRoom).where(chatLog.chatLogTime.eq());
+//    }
 }
