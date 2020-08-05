@@ -1,31 +1,46 @@
-//package com.choi.jajaotalk.api;
+package com.choi.jajaotalk.api;
+
+import com.choi.jajaotalk.domain.MessageType;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
+
+@RestController
+@RequiredArgsConstructor
+public class ChatApiController {
+
+
+//    @MessageMapping("/chat/enter")
+//    @SendTo("/topic/chatRoomId")
+//    public ChatLogDTO sendMessage(ChatLogDTO chatLogDTO){
 //
-//import com.choi.jajaotalk.config.MySocketHandler;
-//import com.choi.jajaotalk.domain.ChatLog;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.messaging.handler.annotation.MessageMapping;
-//import org.springframework.messaging.handler.annotation.SendTo;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.ResponseBody;
-//import org.springframework.web.bind.annotation.RestController;
-//import org.springframework.web.socket.WebSocketSession;
+//    }
+
+    @MessageMapping("/chat/send")
+    @SendTo("/topic/chatRoomId")
+    public Message sendMessage( Message message){
+
+        return message;
+    }
+
+//    @MessageMapping("/chat/leave")
+//    @SendTo("/topic/chatRoomId")
+//    public ChatLogDTO sendMessage(ChatLogDTO chatLogDTO){
 //
-//@RestController
-//public class ChatApiController {
-//
-//        @Autowired
-//        private MySocketHandler webSocketHandler;
-//
-//        @GetMapping("/")
-//        public String index() {
-//            return "index";
-//        }
-//
-//        @GetMapping("/send")
-//        @ResponseBody
-//        public String send(String message) {
-//            webSocketHandler.send(message);
-//            return message;
-//        }
-//}
+//    }
+
+    @Data
+   static class Message {
+
+        private MessageType type;
+        private Long chatRoomId;
+        private String nickname;
+        private String content;
+        private LocalDateTime chatLogTime;
+
+    }
+}
