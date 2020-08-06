@@ -1,7 +1,6 @@
 package com.choi.jajaotalk.api;
 
 import com.choi.jajaotalk.domain.*;
-import com.choi.jajaotalk.repository.ChatRoomRepository;
 import com.choi.jajaotalk.service.ChatLogService;
 import com.choi.jajaotalk.service.ChatRoomService;
 import lombok.AllArgsConstructor;
@@ -36,6 +35,8 @@ public class ChatRoomApiController {
                                         @RequestParam(value = "offset", defaultValue = "0") int offset,
                                         @RequestParam(value = "limit", defaultValue = "10") int limit) {
         //1 시간 동안 로그 없는 채팅방 삭제
+//     chatRoomService.deleteChatRoomOneHourNotExistChatLog();
+
 
         List<ChatRoom> findChatRooms = chatRoomService.searchChatRooms(subject, offset, limit);
         List<ChatRoomListDto> collect = findChatRooms.stream().distinct().map(chatRoom -> new ChatRoomListDto(chatRoom)).collect(toList());

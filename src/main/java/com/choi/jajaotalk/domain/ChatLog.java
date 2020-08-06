@@ -14,7 +14,7 @@ public class ChatLog {
     @Column(name = "chat_log_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
@@ -44,6 +44,7 @@ public class ChatLog {
         chatLog.setChatRoom(chatRoom);
         chatLog.setContent("채팅방이 생성되었습니다.");
         chatLog.setUser(user);
+        chatLog.setType(MessageType.CREATE);
         chatLog.setChatLogTime(chatRoom.getCreatedTime());
         return  chatLog;
     }

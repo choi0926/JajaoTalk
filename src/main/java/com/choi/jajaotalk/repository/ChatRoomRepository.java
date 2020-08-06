@@ -1,5 +1,6 @@
 package com.choi.jajaotalk.repository;
 
+import com.choi.jajaotalk.domain.ChatLog;
 import com.choi.jajaotalk.domain.ChatRoom;
 import static com.choi.jajaotalk.domain.QChatRoom.*;
 import static com.choi.jajaotalk.domain.QChatLog.*;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -56,7 +58,18 @@ public class ChatRoomRepository {
         em.remove(chatRoom);
     }
 
-//    public void removeChatRoomNotExistChatLog() {
-////       return query.delete(chatRoom).where(chatLog.chatLogTime.eq());
-//    }
+    public void removeChatRoomNotExistChatLog() {
+
+        List<ChatLog> chatLogs = query.selectFrom(chatLog).where(chatLogTimeOneHourBeforeExist()).fetch();
+        for (int i =0; i<chatLogs.size(); i++){
+            Long id = chatLogs.get(i).getChatRoom().getId();
+            query.delete(chatRoom).where(chatRoom.id.eq(id)).execute();
+        }
+    }
+
+    private BooleanExpression chatLogTimeOneHourBeforeExist(){
+
+        LocalDateTime now = LocalDateTime.now().minusSeconds(5);
+        return chatLog.chatLogTime.before(now);
+    }
 }

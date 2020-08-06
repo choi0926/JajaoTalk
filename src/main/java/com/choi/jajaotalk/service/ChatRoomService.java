@@ -70,7 +70,8 @@ public class ChatRoomService {
         return chatRoom;
     }
 
-//    public void deleteChatRoomOneHourNotExistChatLog(){
-//        chatRoomRepository.removeChatRoomNotExistChatLog();
-//    }
+    @Transactional
+    public void deleteChatRoomOneHourNotExistChatLog(){
+         chatRoomRepository.removeChatRoomNotExistChatLog();
+    }
 }

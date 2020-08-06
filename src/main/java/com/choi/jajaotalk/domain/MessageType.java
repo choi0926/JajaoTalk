@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum MessageType {
 
-    ENTER("ENTER"),MESSAGE("MESSAGE"),LEAVE("LEAVE");
+    CREATE("CREATE"),ENTER("ENTER"),MESSAGE("MESSAGE"),LEAVE("LEAVE");
 
     private String value;
 }
