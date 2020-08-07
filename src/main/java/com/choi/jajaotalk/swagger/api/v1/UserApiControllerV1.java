@@ -23,8 +23,8 @@ public class UserApiControllerV1 {
     @PostMapping(value = "api/user/login")
     public Map<String, String> selectOneUser(@RequestParam String no) {
         Map<String, String> result = new HashMap<>();
-        result.put("nickname", "test");
-        result.put("password", "test");
+//        result.put("nickname", "test");
+//        result.put("password", "test");
         return result;
     }
 }
