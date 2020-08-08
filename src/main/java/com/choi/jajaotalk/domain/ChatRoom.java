@@ -40,7 +40,6 @@ public class ChatRoom {
 
         if (this.headCount>currentHeadCount){
         this.currentHeadCount++;
-        System.out.println("인원"+this.currentHeadCount);
         } else {
             throw new IllegalStateException("This chat room is already full.");
         }
