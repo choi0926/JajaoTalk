@@ -7,7 +7,6 @@ import com.choi.jajaotalk.service.ChatLogService;
 import com.choi.jajaotalk.service.ChatRoomService;
 import com.choi.jajaotalk.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
@@ -68,12 +67,9 @@ public class MySocketHandler extends TextWebSocketHandler {
             }
         }
 
-        System.out.println("진짜"+sessionList);
-
 
         ChatRoom chatRoom = chatRoomService.findById(new Long(chatMessage.getChatRoomId()));
 
-        System.out.println("test"+chatRoom);
         for (WebSocketSession sess : sessionList) {
             try {
                 sess.sendMessage(new TextMessage(objectMapper.writeValueAsString(chatMessage)));
